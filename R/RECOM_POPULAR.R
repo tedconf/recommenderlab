@@ -10,7 +10,7 @@ BIN_POPULAR <- function(data, parameter = NULL) {
   model <- list( topN = topN )
 
   predict <- function(model, newdata, n=10,
-    data=NULL,  type=c("topNList"),...) {
+    data=NULL,  type=c("topNList"), removeKnown = TRUE, ...) {
 
     type <- match.arg(type)
 
@@ -23,7 +23,7 @@ BIN_POPULAR <- function(data, parameter = NULL) {
     topN <- model$topN
     topN@items <- replicate(nrow(newdata), topN@items, simplify = TRUE)
     names(topN@items) <- rownames(newdata)
-    topN <- removeKnownItems(topN, newdata)
+    if(removeKnown) topN <- removeKnownItems(topN, newdata)
     topN <- bestN(topN, n)
     return(topN)
   }
@@ -68,7 +68,7 @@ REAL_POPULAR <- function(data, parameter = NULL) {
   ), p)
 
   predict <- function(model, newdata, n=10,
-    data=NULL, type=c("topNList", "ratings", "ratingMatrix"), ...) {
+    data=NULL, type=c("topNList", "ratings", "ratingMatrix"), removeKnown = TRUE, ...) {
 
     type <- match.arg(type)
 
@@ -99,7 +99,7 @@ REAL_POPULAR <- function(data, parameter = NULL) {
         function(i) as(as(ratings[i, topN@items[[i]]], "matrix"), "vector")),
         names = rownames(newdata))
 
-      topN <- removeKnownItems(topN, newdata)
+      if(removeKnown) topN <- removeKnownItems(topN, newdata)
       topN <- bestN(topN, n)
       return(topN)
     }
