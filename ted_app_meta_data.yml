@@ -1,0 +1,7 @@
+version: 1.0
+vertical: "Analytics"
+production:
+  endpoint_url:
+staging:
+  endpoint_url:
+
